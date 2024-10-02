@@ -86,7 +86,7 @@ stock void GetPluginBasename(Handle plugin, char[] buffer,int maxlength)
 
 stock bool IsConVarDefault(ConVar convar)
 {
-    char sDefaultVal[16], sCurrentVal[16];
+    char sDefaultVal[AdminFlags_TOTAL], sCurrentVal[AdminFlags_TOTAL];
     GetConVarDefault(convar, sDefaultVal, sizeof(sDefaultVal));
     GetConVarString(convar, sCurrentVal, sizeof(sCurrentVal));
 
@@ -165,13 +165,13 @@ stock bool DODS_IsPlayerProne(int client)
         GetEntPropFloat(client, Prop_Send, "m_flUnProneTime") > 0.0);
 }
 
-stock bool L4D_IsPlayerGhost(int client)
+stock bool L4DGame_IsPlayerGhost(int client)
 {
     return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost", 1));
 }
 
 // "Busy" implies that the client is not in their typical first-person state.
-stock bool L4D_IsSurvivorBusy(int client)
+stock bool L4DGame_IsSurvivorBusy(int client)
 {
     return GetEntityFlags(client) & FL_FROZEN || 
         GetClientHudFlags(client) & ~HIDEHUD_BONUS_PROGRESS || 
@@ -182,14 +182,14 @@ stock bool L4D_IsSurvivorBusy(int client)
         GetEntPropEnt(client, Prop_Send, "m_tongueOwner") > 0;
 }
 
-stock bool L4D_IsInfectedBusy(int client)
+stock bool L4DGame_IsInfectedBusy(int client)
 {
     return GetEntPropFloat(client, Prop_Send, "m_vomitFadeStart") > GetGameTime() || 
         GetEntPropEnt(client, Prop_Send, "m_pounceVictim") > 0 || 
         GetEntPropEnt(client, Prop_Send, "m_tongueVictim") > 0;
 }
 
-stock bool L4D2_IsSurvivorBusy(int client)
+stock bool L4D2Game_IsSurvivorBusy(int client)
 {
     return GetEntityFlags(client) & FL_FROZEN || 
         GetClientHudFlags(client) & ~HIDEHUD_BONUS_PROGRESS || 
@@ -203,7 +203,7 @@ stock bool L4D2_IsSurvivorBusy(int client)
         GetEntPropEnt(client, Prop_Send, "m_tongueOwner") > 0;
 }
 
-stock bool L4D2_IsInfectedBusy(int client)
+stock bool L4D2Game_IsInfectedBusy(int client)
 {
     return GetEntProp(client, Prop_Send, "m_iGlowType") == 3 || 
         GetEntPropFloat(client, Prop_Send, "m_vomitFadeStart") > GetGameTime() || 
@@ -312,22 +312,23 @@ stock void BfWriteSBitLong(Handle bf,int data,int numBits)
     }
 }
 
-stock void BfReadSBitLong(Handle bf,int numBits)
+stock int BfReadSBitLong(Handle bf,int numBits)
 {
-    int bits[numBits], ret, i;
+	int[] bits = new int[numBits];
+	int ret, i;
 
-    for (i = 0; i < numBits; i++)
-    {
-        bits[i] = BfReadBool(bf);
-    }
+	for (i = 0; i < numBits; i++)
+	{
+		bits[i] = BfReadBool(bf);
+	}
 
-    ret = bits[numBits-1] ? -1 : 0;
+	ret = bits[numBits-1] ? -1 : 0;
 
-    for (i = numBits-1; i >= 0; i--)
-    {
-        ret <<= 1;
-        ret |= bits[i];
-    }
+	for (i = numBits-1; i >= 0; i--)
+	{
+		ret <<= 1;
+		ret |= bits[i];
+	}
 
-    return ret;
+	return ret;
 }

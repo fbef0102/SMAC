@@ -21,6 +21,7 @@
 
 /* SM Includes */
 #include <sourcemod>
+#include <sdktools>
 #include <smac>
 #include <smac_cvars>
 #undef REQUIRE_PLUGIN
@@ -143,11 +144,11 @@ public void OnPluginStart()
     AddCvar(Order_Last, "r_visocclusion",               Comp_Equal, Action_Ban, "0.0");
     AddCvar(Order_Last, "snd_show",                     Comp_Equal, Action_Ban, "0.0");
     AddCvar(Order_Last, "snd_visualize",                Comp_Equal, Action_Ban, "0.0");
-    AddCvar(Order_Last, "sv_allowminmodels",            Comp_Replicated, Action_Ban);
-    AddCvar(Order_Last, "sv_cheats",                    Comp_Replicated, Action_Ban);
-    AddCvar(Order_Last, "sv_competitive_minspec",       Comp_Replicated, Action_Ban);
-    AddCvar(Order_Last, "sv_consistency",               Comp_Replicated, Action_Ban);
-    AddCvar(Order_Last, "sv_footsteps",                 Comp_Replicated, Action_Ban);
+    AddCvar(Order_Last, "sv_allowminmodels",            Comp_Replicated, Action_Kick);
+    AddCvar(Order_Last, "sv_cheats",                    Comp_Replicated, Action_Kick);
+    AddCvar(Order_Last, "sv_competitive_minspec",       Comp_Replicated, Action_Kick);
+    //AddCvar(Order_Last, "sv_consistency",               Comp_Replicated, Action_Kick);
+    AddCvar(Order_Last, "sv_footsteps",                 Comp_Replicated, Action_Kick);
     AddCvar(Order_Last, "vcollide_wireframe",           Comp_Equal, Action_Ban, "0.0");
     
     // Commands.
@@ -618,7 +619,7 @@ public void OnConVarChanged(ConVar convar, char[] oldValue, char[] newValue)
     // sv_cheats, if enabled, will false positive on client-side cheat commands.
     if (StrEqual(sCvar, "sv_cheats") && StringToInt(newValue) != 0)
     {
-        SetConVarInt(convar, 0, true, true);
+        //SetConVarInt(convar, 0, true, true);
         return;
     }
 
@@ -629,7 +630,7 @@ void ScrambleCvars()
 {
     Handle[][] hCvarADTs = new Handle[view_as<int>(Order_MAX)][g_iADTSize];
     Handle hDataTrie;
-    int iOrder, iADTIndex[view_as<int>(CvarOrder)];
+    int iOrder, iADTIndex[view_as<int>(Order_MAX)];
 
     for (int i = 0; i < g_iADTSize; i++)
     {
@@ -641,7 +642,7 @@ void ScrambleCvars()
 
     ClearArray(g_hCvarADT);
 
-    for (int i = 0; i < view_as<int>(CvarOrder); i++)
+    for (int i = 0; i < view_as<int>(Order_MAX); i++)
     {
         if (iADTIndex[i] > 0)
         {
