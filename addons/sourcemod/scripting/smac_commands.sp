@@ -82,10 +82,10 @@ public void OnPluginStart()
     AddCommandListener(Command_BlockEntExploit, "ent_fire");
 
     // L4D2 uses this for confogl.
-    if (SMAC_GetGameType() != Game_L4D2 && SMAC_GetGameType() != Game_L4D)
-    {
-        AddCommandListener(Command_BlockEntExploit, "give");
-    }
+    //if (SMAC_GetGameType() != Game_L4D2 && SMAC_GetGameType() != Game_L4D)
+    //{
+    //    AddCommandListener(Command_BlockEntExploitGive, "give");
+    //}
 
     // Init...
     g_hBlockedCmds = CreateTrie();
@@ -154,6 +154,8 @@ public void OnPluginStart()
             SetTrieValue(g_hIgnoredCmds, "choose_closedoor", true);
             SetTrieValue(g_hIgnoredCmds, "choose_opendoor", true);
             SetTrieValue(g_hIgnoredCmds, "z_spawn", true);
+            SetTrieValue(g_hIgnoredCmds, "give", true);
+            SetTrieValue(g_hIgnoredCmds, "record", true);
         }
         case Game_L4D2:
         {
@@ -161,6 +163,8 @@ public void OnPluginStart()
             SetTrieValue(g_hIgnoredCmds, "choose_opendoor", true);
             SetTrieValue(g_hIgnoredCmds, "z_spawn_old", true);
             SetTrieValue(g_hIgnoredCmds, "z_spawn", true);
+            SetTrieValue(g_hIgnoredCmds, "give", true);
+            SetTrieValue(g_hIgnoredCmds, "record", true);
         }
         case Game_ND:
         {
@@ -332,7 +336,8 @@ public Action Command_Say(int client, const char[] command,int args)
     return Plugin_Continue;
 }
 
-public Action Command_BlockEntExploit(int client, const char[] command,int args)
+
+Action Command_BlockEntExploit(int client, const char[] command,int args)
 {
     if (!IS_CLIENT(client))
     {
@@ -383,6 +388,60 @@ public Action Command_BlockEntExploit(int client, const char[] command,int args)
     
     return Plugin_Continue;
 }
+
+/*
+Action Command_BlockEntExploitGive(int client, const char[] command,int args)
+{
+    if (!IS_CLIENT(client))
+    {
+        return Plugin_Continue;
+    }
+    
+    if (!IsClientInGame(client))
+    {
+        return Plugin_Stop;
+    }
+    
+    char sArgString[512];
+    
+    if (GetCmdArgString(sArgString, sizeof(sArgString)) > 500)
+    {
+        return Plugin_Stop;
+    }
+
+    if (StrContains(sArgString, "admin") != -1 || 
+        StrContains(sArgString, "alias", false) != -1 || 
+        StrContains(sArgString, "logic_auto") != -1 || 
+        StrContains(sArgString, "logic_autosave") != -1 || 
+        StrContains(sArgString, "logic_branch") != -1 || 
+        StrContains(sArgString, "logic_case") != -1 || 
+        StrContains(sArgString, "logic_collision_pair") != -1 || 
+        StrContains(sArgString, "logic_compareto") != -1 || 
+        StrContains(sArgString, "logic_lineto") != -1 || 
+        StrContains(sArgString, "logic_measure_movement") != -1 || 
+        StrContains(sArgString, "logic_multicompare") != -1 || 
+        StrContains(sArgString, "logic_navigation") != -1 || 
+        StrContains(sArgString, "logic_relay") != -1 || 
+        StrContains(sArgString, "logic_timer") != -1 || 
+        StrContains(sArgString, "ma_") != -1 || 
+        StrContains(sArgString, "meta") != -1 || 
+        StrContains(sArgString, "mp_", false) != -1 || 
+        StrContains(sArgString, "point_clientcommand") != -1 || 
+        StrContains(sArgString, "point_servercommand") != -1 || 
+        StrContains(sArgString, "quit", false) != -1 || 
+        StrContains(sArgString, "quti") != -1 || 
+        StrContains(sArgString, "rcon", false) != -1 || 
+        StrContains(sArgString, "restart", false) != -1 || 
+        StrContains(sArgString, "sm") != -1 || 
+        StrContains(sArgString, "sv_", false) != -1 || 
+        StrContains(sArgString, "taketimer") != -1)
+    {
+        return Plugin_Stop;
+    }
+    
+    return Plugin_Continue;
+}
+*/
 
 public Action Command_CommandListener(int client, const char[] command,int argc)
 {
