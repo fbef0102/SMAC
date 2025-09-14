@@ -118,7 +118,7 @@ public Action Timer_AddTicks(Handle timer)
 
 public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
 {   
-    if (!IsClientInGame(client))
+    if (client <= 0 || !IsClientInGame(client))
     {
         return Plugin_Handled;
     }
