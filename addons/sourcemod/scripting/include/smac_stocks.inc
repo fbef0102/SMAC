@@ -29,7 +29,6 @@
 #define MAX_ENTITIES    4096
 
 #define MAX_MAPNAME_LENGTH  32
-#define MAX_AUTHID_LENGTH   64
 
 // Hud Element hiding flags
 #define HIDEHUD_WEAPONSELECTION     (1 << 0)	// Hide ammo count & weapon selection
